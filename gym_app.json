@@ -3,21 +3,21 @@
         {
             "id": 1,
             "name": "box",
-            "price": 30,
+            "price": "30£",
             "time": 15.00,
             "days": ["monday", "thursday"]
         },
         {
             "id": 2,
             "name": "pilates",
-            "price": 25.00,
+            "price": "25£",
             "time": 10.00,
             "days": ["tuesday", "wednesday", "friday"]
         },
         {
             "id": 3,
             "name": "Swimming class",
-            "price": 40,
+            "price": "40£",
             "time": 18.00,
             "days": ["thursday", "friday", "saturday"]
         }
@@ -67,7 +67,10 @@
             "name": "paride",
             "surname": "acconciamessa",
             "age": 30,
-            "gender": "male"
+            "gender": "male",
+            "frequency_days": "0"
         }
-    ]
+    ],
+    "bookings": []
+
 }
