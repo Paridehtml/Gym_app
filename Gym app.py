@@ -7,6 +7,7 @@ memberships = data["memberships"]
 personal_trainers = data["personal_trainers"]
 personal_profile = data["personal_profile"]
 
+
 def sign_in():
     print("\n-- Sign in for access --\n")
     while True:
@@ -27,11 +28,15 @@ def main_menu():
     print("---------------------\n")
     print("1. Get you membership\n")
     print("2. Join an activity\n")
-    print("3. Check your progress\n")
-    print("4. Tap in\n")
+    print("3. Tap in\n")
+    print("4. Check your progress\n")
     print("5. Your profile\n")
     choice = input("What you want to do today? type here a number from the list: ")
     if choice == "1": get_mermbership()
+    elif choice == "2": join_activity(username="example_user")
+    elif choice == "3": tap_in()
+    elif choice == "4": progress()
+    elif choice == "5": profile()
         
 def get_mermbership():
     print("\n----- MEMBERSHIPS -----\n")
@@ -43,20 +48,83 @@ def get_mermbership():
         if user_choice == "1": print("Thank you for purchasing the Exercise Membership, you are now a member."); break
         elif user_choice == "2": print("Thank you for purchasing the Premium Membership, you are now a member.");  break
         elif user_choice == "3": print("Thank you for purchasing the VIP Membership, you are now a member."); break
-        else: print("Please enter a valid number")
+        elif user_choice == "back": return main_menu()
+        else: print("Please enter a valid number, or 'back' to go back to the main menu\n")
+    while True:
 
-def join_activity():
+        command = input("Do you want to go back to menu? ")
+        if command != "yes":
+            print("please type 'yes' or 'no' ")
+            return command
+        else:
+            main_menu()
+            
+
+def join_activity(username):
+    try:
+        with open("gym_app.json", "r") as file:
+            data = json.load(file)
+    except FileNotFoundError:
+        print("File 'gym_app.json' missing")
+        return
     print("\n----- ACTIVITIES -----\n")
-    print("Book an activity secting one of the following:\n")
-    print("1. Pilates\n")
-    print("2. Box\n")
-    print("3. Swim class\n")
+    print("Book an activity selecting one of the following:\n")
+    for activity in data["activities"]:
+        print(f"'{activity['name']}' for the special price of {activity['price']}")
+    while True:
+        user_choice1 = input("\nWhich one will be more suitable for you? \n")
+        
+        selected_activity = None
+        for activity in data["activities"]:
+            if user_choice1.lower() == activity["name"].lower():
+                selected_activity = activity
+                break
+        if user_choice1.lower() == "back":
+            return main_menu()
+        elif selected_activity:
+            print(f"\nthank you for choosing us, your activity {selected_activity["name"]} has been successfully booked\n") 
+            
+            booking = {"username": username, "activity": selected_activity["name"]}
 
+            if "bookings" not in data:
+                data["bookings"] = []
+
+            data["bookings"].append(booking)
+            with open("gym_app.json", "w") as file: 
+                json.dump(data, file, indent=4)
+            break
+        else:
+            print("This activity is not available. Please select one from the list above, or type 'back' to return to the main menu") 
+    back = input("\ntype 'back' to go back to the main manu ")
+    if back != "back":
+        return join_activity(username)
+    else:
+        return main_menu()
+    
+def tap_in():
+    try:
+        with open("gym_app.json", "r") as file:
+            data = json.load(file)
+    except FileNotFoundError:
+        data = {"personal_profile": {"frequency": 0}}
+
+    while True:
+        new_tap = input("Please type 'in' to register your exercise or 'back' to go back to the menu: ").lower()
+        if new_tap == "back":
+            return main_menu()
+        elif new_tap == "in":
+            data["personal_profile"]["frequency"] += 1
+            print(f"Great! Your activity has been recorded. Total frequency: {data['personal_profile']['frequency']}")
+            
+            with open("gym_app.json", "w") as file:
+                json.dump(data, file, indent=4)
+            break
+        else:
+            print("Invalid input. Please type 'in' or 'back'.")
+    
  
 
 status_membership = ["none", ]
+#sign_in()
 print(f"membership status: {status_membership}")
 main_menu()
-#sign_in()
-#try: choice = input("Select your option: ")
-        #except ValueError: print("\nInvalid input! Choose a number from the list.\n")
