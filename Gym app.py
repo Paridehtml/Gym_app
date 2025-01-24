@@ -51,55 +51,60 @@ def get_mermbership():
         elif user_choice == "back": return main_menu()
         else: print("Please enter a valid number, or 'back' to go back to the main menu\n")
     while True:
-
         command = input("Do you want to go back to menu? ")
-        if command != "yes":
-            print("please type 'yes' or 'no' ")
-            return command
-        else:
+        if command == "yes":
             main_menu()
+        elif command == "no":
+            break 
+        else:
+            print("please type 'yes' or 'no' ")
             
 
 def join_activity(username):
-    try:
-        with open("gym_app.json", "r") as file:
-            data = json.load(file)
-    except FileNotFoundError:
-        print("File 'gym_app.json' missing")
-        return
+    #try:
+    #    with open("gym_app.json", "r") as file:
+    #        data = json.load(file)
+    #except FileNotFoundError:
+    #    print("File 'gym_app.json' missing")
+    #    return
     print("\n----- ACTIVITIES -----\n")
     print("Book an activity selecting one of the following:\n")
     for activity in data["activities"]:
         print(f"'{activity['name']}' for the special price of {activity['price']}")
     while True:
-        user_choice1 = input("\nWhich one will be more suitable for you? \n")
         
+        user_choice1 = input("\nWhich one will be more suitable for you? \n")
         selected_activity = None
         for activity in data["activities"]:
             if user_choice1.lower() == activity["name"].lower():
                 selected_activity = activity
+                print(f"\nthank you for choosing us, your activity {selected_activity["name"]} has been successfully booked!\n") 
                 break
-        if user_choice1.lower() == "back":
-            return main_menu()
-        elif selected_activity:
-            print(f"\nthank you for choosing us, your activity {selected_activity["name"]} has been successfully booked\n") 
+
+            elif user_choice1.lower() == "back":
+                return main_menu()        
             
-            booking = {"username": username, "activity": selected_activity["name"]}
+            elif selected_activity.lower() != activity["name"].lower() or selected_activity.lower() != "back":
+                print("\nThis activity is not available. Please select one from the list above, or type 'back' to return to the main menu ")  
+                join_activity(username)  
 
-            if "bookings" not in data:
-                data["bookings"] = []
+        with open("gym_app.json", "w") as file: 
+            json.dump(data, file, indent=4)
+        booking = {"username": username, "activity": selected_activity["name"]} 
+        data["bookings"].append(booking)  
+        
+        while True:
+            back = input("\nType 'back' to go back to the main manu or 'stay' to check more activities ")
+            if back.lower() == "back":
+                return main_menu()
+            elif back.lower() == "stay":
+                print()
+            else: 
+                print("Please type 'back' or 'stay' to continue")
+             
 
-            data["bookings"].append(booking)
-            with open("gym_app.json", "w") as file: 
-                json.dump(data, file, indent=4)
-            break
-        else:
-            print("This activity is not available. Please select one from the list above, or type 'back' to return to the main menu") 
-    back = input("\ntype 'back' to go back to the main manu ")
-    if back != "back":
-        return join_activity(username)
-    else:
-        return main_menu()
+        
+                    
     
 def tap_in():
     try:
@@ -128,3 +133,6 @@ status_membership = ["none", ]
 #sign_in()
 print(f"membership status: {status_membership}")
 main_menu()
+
+#try: choice = input("Select your option: ")
+        #except ValueError: print("\nInvalid input! Choose a number from the list.\n")
