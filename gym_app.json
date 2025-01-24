@@ -16,7 +16,7 @@
         },
         {
             "id": 3,
-            "name": "Swimming class",
+            "name": "swimming class",
             "price": "40£",
             "time": 18.00,
             "days": ["thursday", "friday", "saturday"]
