@@ -4,7 +4,7 @@
             "id": 1,
             "name": "box",
             "price": "30£",
-            "time": 15.00,
+            "time": 13.00,
             "days": ["monday", "thursday"]
         },
         {
